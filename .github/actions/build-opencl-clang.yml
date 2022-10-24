@@ -1,0 +1,53 @@
+name: Build opencl-clang
+inputs:
+  ref_llvm:
+    required: true
+  ref_translator:
+    required: true
+  ref_opencl-clang:
+    required: true
+
+outputs:
+  build_result:
+    value: ${{ steps.build_opencl-clang.outputs.build_result }}
+
+runs:
+  using: 'composite'
+  steps:
+
+    - name: Checkout LLVM
+      uses: actions/checkout@v3
+      with:
+        repository: llvm/llvm-project
+        ref: ${{ inputs.ref_llvm }}
+        path: llvm-project
+
+    - name:  Checkout SPIRV-LLVM-Translator
+      uses: actions/checkout@v3
+      with:
+        repository: KhronosGroup/SPIRV-LLVM-Translator
+        ref: ${{ inputs.ref_translator }}
+        path: llvm-project/SPIRV-LLVM-Translator
+        
+    - name:  Checkout opencl-clang
+      uses: actions/checkout@v3
+      with:
+        path: llvm-project/opencl-clang
+        ref: ${{ inputs.ref_opencl-clang }}
+
+    - name: Configure
+      run: |
+        mkdir build && cd build
+        cmake ${{ github.workspace }}/llvm-project/llvm      \
+          -DLLVM_ENABLE_PROJECTS="clang"                     \
+          -DLLVM_EXTERNAL_PROJECTS="llvm-spirv;opencl-clang" \
+          -DLLVM_EXTERNAL_LLVM_SPIRV_SOURCE_DIR=${{ github.workspace }}/llvm-project/SPIRV-LLVM-Translator \
+          -DLLVM_EXTERNAL_OPENCL_CLANG_SOURCE_DIR=${{ github.workspace }}/llvm-project/opencl-clang        \
+          -DCMAKE_BUILD_TYPE=Release    \
+          -DLLVM_TARGETS_TO_BUILD="X86" \
+          -G "Unix Makefiles"
+
+    - name: Build
+      run: |
+        cd build
+        make opencl-clang -j8

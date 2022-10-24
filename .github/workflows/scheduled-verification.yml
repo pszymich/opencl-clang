@@ -1,0 +1,20 @@
+name: In-tree build
+
+on:
+  schedule:
+    - cron: 0 0 * * 0
+
+jobs:
+  run-verification-on-release-branches:
+    name: Linux
+    strategy:
+      matrix:
+        llvm_version: [ 10, 11, 12, 13, 14, 15 ]
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Build opencl-clang
+        uses: actions/build-opencl-clang.yml
+        with:
+          ref_llvm: releases/${{ matrix.llvm_version }}.x
+          ref_translator: llvm_release_${{ matrix.llvm_version }}0
+          ref_opencl-clang: ocl-open-${{ matrix.llvm_version }}0
