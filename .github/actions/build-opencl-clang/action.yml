@@ -7,16 +7,14 @@ inputs:
   ref_opencl-clang:
     required: true
 
-outputs:
-  build_result:
-    value: ${{ steps.build_opencl-clang.outputs.build_result }}
-
 runs:
   using: 'composite'
   steps:
-    - run: git config --global user.email "action@intel.com"
-      shell: bash
-    - run: git config --global user.name "Action Bot"
+
+    # Setup git credentials to make applying patches possible
+    - run: |
+        git config --global user.email "action@intel.com"
+        git config --global user.name "Action Bot"
       shell: bash
 
     - name: Checkout LLVM
@@ -24,25 +22,21 @@ runs:
       with:
         repository: llvm/llvm-project
         path: llvm-project
-        fetch-depth: 1  # Complete branch history for patching clang
         ref: ${{ inputs.ref_llvm }}
 
-    - name:  Checkout SPIRV-LLVM-Translator
+    - name: Checkout SPIRV-LLVM-Translator
       uses: actions/checkout@v3
       with:
         repository: KhronosGroup/SPIRV-LLVM-Translator
         path: llvm-project/SPIRV-LLVM-Translator
-        fetch-depth: 1  # Complete branch history for patching translator
         ref: ${{ inputs.ref_translator }}
         
-    - name:  Checkout opencl-clang
+    - name: Checkout opencl-clang
       uses: actions/checkout@v3
       with:
         path: llvm-project/opencl-clang
-        fetch-depth: 1
         ref: ${{ inputs.ref_opencl-clang }}
         
-
     - name: Configure
       shell: bash
       run: |
