@@ -14,13 +14,17 @@ outputs:
 runs:
   using: 'composite'
   steps:
+    - run: git config --global user.email "action@intel.com"
+      shell: bash
+    - run: git config --global user.name "Action Bot"
+      shell: bash
 
     - name: Checkout LLVM
       uses: actions/checkout@v3
       with:
         repository: llvm/llvm-project
         path: llvm-project
-        fetch-depth: 0  # Complete branch history for patching clang
+        fetch-depth: 1  # Complete branch history for patching clang
         ref: ${{ inputs.ref_llvm }}
 
     - name:  Checkout SPIRV-LLVM-Translator
@@ -28,7 +32,7 @@ runs:
       with:
         repository: KhronosGroup/SPIRV-LLVM-Translator
         path: llvm-project/SPIRV-LLVM-Translator
-        fetch-depth: 0  # Complete branch history for patching translator
+        fetch-depth: 1  # Complete branch history for patching translator
         ref: ${{ inputs.ref_translator }}
         
     - name:  Checkout opencl-clang
