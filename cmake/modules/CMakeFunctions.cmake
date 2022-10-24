@@ -1,5 +1,8 @@
 #
 # Set compiler RTTI options according to the given flag
+
+
+
 #
 macro(use_rtti val)
     if( CMAKE_COMPILER_IS_GNUCXX OR "${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
