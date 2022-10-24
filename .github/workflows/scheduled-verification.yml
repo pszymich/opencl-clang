@@ -12,8 +12,11 @@ jobs:
         llvm_version: [ 10, 11, 12, 13, 14, 15 ]
     runs-on: ubuntu-22.04
     steps:
+
+      - use: actions/checkout@v3
+      
       - name: Build opencl-clang
-        uses: actions/build-opencl-clang.yml
+        uses: ./.github/actions/build-opencl-clang.yml
         with:
           ref_llvm: releases/${{ matrix.llvm_version }}.x
           ref_translator: llvm_release_${{ matrix.llvm_version }}0
