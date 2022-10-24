@@ -1,5 +1,5 @@
 name: On push verification
-run-name: '${{ github.event_name }}: ${{ github.ref_name }}'
+run-name: '${{ github.event_name }}: ${{ github.ref_name }} ${{ github.base_name }}'
 
 on:
   push:
