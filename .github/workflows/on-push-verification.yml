@@ -15,9 +15,9 @@ on:
 jobs:
 
   verify_default_branch:
-     # ref_name  for 'on: push'
-     # base_name for 'on: pull_request'
-    if: ${{ (github.event_name == 'push' && github.ref_name == 'master') || (github.event_name == 'pull_request' && github.base_name == 'master') }}
+     # ref_name for 'on: push'
+     # base_ref for 'on: pull_request'
+    if: ${{ (github.event_name == 'push' && github.ref_name == 'master') || (github.event_name == 'pull_request' && github.base_ref == 'master') }}
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout opencl-clang sources for action files
@@ -29,9 +29,9 @@ jobs:
           ref_opencl-clang: ${{ github.ref }}
 
   verify_release_branch:
-    # ref_name  for 'on: push'
-    # base_name for 'on: pull_request'
-    if: ${{ github.ref_name != 'master' && github.base_name != 'master' }}
+    # ref_name for 'on: push'
+    # base_ref for 'on: pull_request'
+    if: ${{ github.ref_name != 'master' && github.base_ref != 'master' }}
     runs-on: ubuntu-22.04
     steps:
 
