@@ -1,5 +1,9 @@
 name: On demand verification
-run-name: 'On demand by ${{ github.actor }}: ${{ github.ref_name }}'
+run-name: 'On demand by ${{ github.actor }}'
+
+# ===---
+# To be run manually by maintainers
+# ===---
 
 on:
   workflow_dispatch:
@@ -23,9 +27,12 @@ jobs:
     if: ${{ github.ref_name == 'master' }}
     runs-on: ubuntu-22.04
     steps:
-      - name: Checkout opencl-clang sources for action files
+
+      - name: Checkout opencl-clang sources for action files availabilty
         uses: actions/checkout@v3
-      - uses: ./.github/actions/build-opencl-clang
+
+      - name: Run build-opencl-clang action
+        uses: ./.github/actions/build-opencl-clang
         with:
           ref_llvm: ${{ inputs.ref_llvm }}
           ref_translator:  ${{ inputs.ref_translator }}
