@@ -86,7 +86,7 @@ if (NOT WIN32)
     add_subdirectory( linux_linker bin)
 endif()
 
-use_rtti(FALSE)
+use_rtti(TRUE)
 use_eh(TRUE)
 
 if (CMAKE_SIZEOF_VOID_P EQUAL 4)
